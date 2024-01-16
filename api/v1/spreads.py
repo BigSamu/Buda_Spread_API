@@ -47,7 +47,7 @@ async def get_all_spreads() -> List[schemas.SpreadResponse]:
 
 @router.get(
     "/",
-
+    response_model=schemas.SpreadResponse,
     responses={
         404: {"model": schemas.ErrorResponse, "description": "Spread for Market Not Found"},
         500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
