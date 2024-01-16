@@ -10,6 +10,7 @@ from api.core import verify_access_to_shared_resource
 
 router = APIRouter()
 
+
 @router.get("", response_model=List[schemas.ResourceResponse])
 def read_all_resources(
     db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)
@@ -38,6 +39,7 @@ def read_one_resource(
         )
     return resource
 
+
 @router.get("/shared/{resource_id}", response_model=schemas.ResourceResponse)
 def read_one_shared_resource(
     resource_id: int,
@@ -48,9 +50,7 @@ def read_one_shared_resource(
     Retrieve one shared resource by id using shared macaroon token.
     """
 
-    verify_access_to_shared_resource(
-            access_token = access_token,
-            resource_id = resource_id)
+    verify_access_to_shared_resource(access_token=access_token, resource_id=resource_id)
 
     resource = crud.resource.get_one(db, model_id=resource_id)
     if not resource:

@@ -17,6 +17,7 @@ from api.api.deps import get_db, get_access_token
 
 router = APIRouter()
 
+
 @router.post("/login", response_model=schemas.UserResponse)
 def login(
     response: Response,

@@ -7,17 +7,10 @@ name = "pypi"
 fastapi = "*"
 uvicorn = "*"
 pydantic = "*"
-python-multipart = "*"
-pymacaroons = "*"
-passlib = "*"
-bcrypt = "*"
-email-validator = "*"
-python-dateutil = "*"
 pydantic-settings = "*"
-sqlalchemy = "*"
-psycopg2-binary = "*"
 
 [dev-packages]
+black = "*"
 
 [requires]
 python_version = "3.9"
