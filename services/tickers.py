@@ -1,8 +1,9 @@
-from services.base import BaseAPIClient
+from services.base_api_client import BaseAPIClient
 from typing import Dict, Any
 
+
 class TickerService(BaseAPIClient):
-    def get_all_tickers(self) -> Dict[str, Any]:
+    def get_all(self) -> Dict[str, Any]:
         """
         Retrieves all tickers from the BUDA API.
 
@@ -11,7 +12,7 @@ class TickerService(BaseAPIClient):
         """
         return self._get("markets/tickers")
 
-    def get_ticker_by_market_id(self, market_id: str) -> Dict[str, Any]:
+    def get_one_by_market_id(self, market_id: str) -> Dict[str, Any]:
         """
         Retrieves the ticker for a specific market ID from the BUDA API.
 

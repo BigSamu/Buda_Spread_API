@@ -1,8 +1,9 @@
-from base_api_client import BaseAPIClient
+from services.base_api_client import BaseAPIClient
 from typing import Dict, Any
 
+
 class MarketService(BaseAPIClient):
-    def get_all_markets(self) -> Dict[str, Any]:
+    def get_all(self) -> Dict[str, Any]:
         """
         Retrieves all markets from the BUDA API.
 
@@ -11,7 +12,7 @@ class MarketService(BaseAPIClient):
         """
         return self._get("markets")
 
-    def get_market_by_id(self, market_id: str) -> Dict[str, Any]:
+    def get_one_by_id(self, market_id: str) -> Dict[str, Any]:
         """
         Retrieves a specific market by its ID from the BUDA API.
 

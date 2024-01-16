@@ -1,6 +1,6 @@
 from services.markets import MarketService
 from services.tickers import TickerService
-from services.base import BaseAPIClient
+
 
 class BudaAPI:
     def __init__(self):
@@ -9,4 +9,4 @@ class BudaAPI:
 
 
 # Instantiate the main API class
-buda_api = BaseAPIClient()
+buda_api = BudaAPI()
