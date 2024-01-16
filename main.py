@@ -2,15 +2,15 @@ import uvicorn
 from fastapi import FastAPI
 
 
-from api.api.v1 import api_router
-from api.core import settings
+from api.v1 import api_router
+from core import settings
 
 # ******************************************************************************
 # FASTAPI APP SETTINGS
 # ******************************************************************************
 
 app = FastAPI(
-    title="Buda.com Spread API",
+    title="Buda Spread API",
     description="This API is designed for Buda.com to calculate and manage the spread across various markets. Key features include:\n\n"
     "- Retrieving the spread of all markets in a single API call.\n"
     "- Managing a 'spread alert' system, enabling users to set and check spread thresholds.\n\n"
