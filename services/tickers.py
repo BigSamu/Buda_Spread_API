@@ -3,14 +3,6 @@ from typing import Dict, Any
 
 
 class TickerService(BaseAPIClient):
-    def get_all(self) -> Dict[str, Any]:
-        """
-        Retrieves all tickers from the BUDA API.
-
-        Returns:
-            Dict[str, Any]: A dictionary containing the JSON response with all tickers.
-        """
-        return self._get("markets/tickers")
 
     def get_one_by_market_id(self, market_id: str) -> Dict[str, Any]:
         """
