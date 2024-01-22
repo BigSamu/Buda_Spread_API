@@ -1,5 +1,5 @@
 import requests
-from core import settings
+from config import settings
 from typing import Any, Dict
 
 

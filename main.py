@@ -1,9 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
-
+from fastapi.openapi.utils import get_openapi
 
 from api.v1 import api_router
-from core import settings
+from config import settings
 
 # ******************************************************************************
 # FASTAPI APP SETTINGS
@@ -18,7 +18,7 @@ app = FastAPI(
     version="1.0.0",
     contact={
         "name": "Samuel Valdes Gutierrez",
-        "email": "valdesgutierrez@gmail.com",
+        # "email": "valdesgutierrez@gmail.com",
         "github": "https://github.com/BigSamu",
     },
     terms_of_service="http://api.buda.com/terms/",
@@ -29,6 +29,7 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url=None,  # Set to None if you don't want to use ReDoc
 )
+
 
 # ******************************************************************************
 # ROUTE SETTINGS

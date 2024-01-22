@@ -1,4 +1,3 @@
-import secrets
 from typing import Optional
 
 from pathlib import Path

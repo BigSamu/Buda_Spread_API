@@ -3,7 +3,6 @@ from typing import Dict, Any
 
 
 class TickerService(BaseAPIClient):
-
     def get_one_by_market_id(self, market_id: str) -> Dict[str, Any]:
         """
         Retrieves the ticker for a specific market ID from the BUDA API.

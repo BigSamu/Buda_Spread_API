@@ -1,3 +1,4 @@
+
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -12,6 +13,12 @@ requests = "*"
 
 [dev-packages]
 black = "*"
+pytest = "*"
+pytest-asyncio = "*"
+
+[scripts]
+start = "uvicorn main:app --reload"
+test = "pytest"
 
 [requires]
 python_version = "3.9"

@@ -12,3 +12,14 @@ class MarketService(BaseAPIClient):
         """
         return self._get("markets")
 
+    def get_one_by_id(self, market_id: str) -> Dict[str, Any]:
+        """
+        Retrieves a specific market by its ID from the BUDA API.
+
+        Args:
+            market_id (str): The unique identifier for the market.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing the JSON response for the specified market.
+        """
+        return self._get(f"markets/{market_id}")
