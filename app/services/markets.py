@@ -1,4 +1,4 @@
-from services.base_api_client import BaseAPIClient
+from app.services.base_api_client import BaseAPIClient
 from typing import Dict, Any
 
 

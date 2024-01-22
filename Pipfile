@@ -1,4 +1,3 @@
-
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -14,10 +13,10 @@ requests = "*"
 [dev-packages]
 black = "*"
 pytest = "*"
-pytest-asyncio = "*"
+coverage = "*"
 
 [scripts]
-start = "uvicorn main:app --reload"
+start = "uvicorn app.main:app --reload"
 test = "pytest"
 
 [requires]

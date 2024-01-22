@@ -4,9 +4,9 @@ from typing import Any, List, Dict
 from fastapi import APIRouter, HTTPException, status, Path, Body
 from requests.exceptions import HTTPError
 
-import schemas
-from services import buda_api
-from utils import calculate_spread
+from app import schemas
+from app.services import buda_api
+from app.utils import calculate_spread
 
 router = APIRouter()
 
@@ -47,6 +47,7 @@ def get_all_spreads() -> List[schemas.SpreadResponse]:
     except Exception as e:
         error_message = str(e)
         error_name = e.__class__.__name__
+        print(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred: {error_name}: {error_message}",
@@ -100,6 +101,7 @@ async def get_spread_by_market_id(market_id: str) -> Any:
     except Exception as e:
         error_message = str(e)
         error_name = e.__class__.__name__
+        print(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred: {error_name}: {error_message}",

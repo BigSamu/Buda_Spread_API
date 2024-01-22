@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from api.v1 import api_router
+from app.api.v1 import api_router
 from config import settings
 
 # ******************************************************************************

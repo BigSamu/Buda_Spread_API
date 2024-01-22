@@ -1,1 +1,1 @@
-from config.config import settings
+from config.app_config import settings

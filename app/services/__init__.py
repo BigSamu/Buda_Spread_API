@@ -1,5 +1,5 @@
-from services.markets import MarketService
-from services.tickers import TickerService
+from app.services.markets import MarketService
+from app.services.tickers import TickerService
 
 
 class BudaAPI:
