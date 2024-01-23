@@ -6,7 +6,7 @@ from requests.exceptions import HTTPError
 
 from app import schemas
 from app.services import buda_api
-from app.utils import calculate_spread
+from app.utils import calculate_spread, format_spread_dict
 
 router = APIRouter()
 
@@ -40,10 +40,20 @@ def get_all_spreads() -> List[schemas.SpreadResponse]:
         all_spreads = []
         markets = buda_api.markets.get_all()
         for market in markets["markets"]:
-            spread_dict = calculate_spread(market_id=market["id"])
-            spread_obj = schemas.SpreadResponse(**spread_dict)
+            ticker = buda_api.tickers.get_one_by_market_id(market_id=market["id"])["ticker"]
+            spread_dict = calculate_spread(
+                min_ask=ticker["min_ask"],
+                max_bid=ticker["max_bid"],
+                market_id=market["id"]
+            )
+            spread_obj = schemas.SpreadResponse(**format_spread_dict(spread_dict))
             all_spreads.append(spread_obj)
         return all_spreads
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Given data from Buda API is invalid. {str(e)}",
+        )
     except Exception as e:
         error_message = str(e)
         error_name = e.__class__.__name__
@@ -89,10 +99,19 @@ async def get_spread_by_market_id(market_id: str) -> Any:
     """
 
     try:
-        market = buda_api.markets.get_one_by_id(market_id=market_id)["market"]
-        spread_dict = calculate_spread(market_id=market["id"])
-        spread_obj = schemas.SpreadResponse(**spread_dict)
+        ticker = buda_api.tickers.get_one_by_id(market_id=market_id)["ticker"]
+        spread_dict = calculate_spread(
+                min_ask=ticker["min_ask"],
+                max_bid=ticker["max_bid"],
+                market_id=market["id"]
+            )
+        spread_obj = schemas.SpreadResponse(**format_spread_dict(spread_dict))
         return spread_obj
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Given data from Buda API is invalid. {str(e)}",
+        )
     except HTTPError as http_err:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

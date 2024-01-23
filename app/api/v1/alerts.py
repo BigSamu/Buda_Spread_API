@@ -6,7 +6,7 @@ from requests.exceptions import HTTPError
 
 from app import schemas
 from app.services import buda_api
-from app.utils import calculate_spread, comapre_spread_with_alert_value
+from app.utils import calculate_spread, compare_spread_with_alert_value
 
 router = APIRouter()
 spread_alert = {"value": None}
@@ -56,9 +56,10 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
         alert_value = spread_alert["value"]
         message_alerts = {}
         for market in markets["markets"]:
-            current_spread = calculate_spread(market_id=market["id"])
+            ticker = buda_api.tickers.get_one_by_market_id(market_id=market["id"]).dict()
+            current_spread = calculate_spread(**ticker)
             spread_value = current_spread["value"]
-            message = comapre_spread_with_alert_value(spread_value, alert_value, market["id"])
+            message = compare_spread_with_alert_value(spread_value, alert_value, market["id"])
             message_alerts[market["id"]] = message
         return message_alerts
 
@@ -123,7 +124,7 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
         alert_value = spread_alert["value"]
         current_spread = calculate_spread(market_id=market_id)
         spread_value = current_spread["value"]
-        message_alert = comapre_spread_with_alert_value(spread_value, alert_value, market_id)
+        message_alert = compare_spread_with_alert_value(spread_value, alert_value, market_id)
         return message_alert
 
     except HTTPError as http_err:
@@ -174,7 +175,8 @@ async def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
     """
     try:
         spread_alert["value"]=alert.value
-        message = {"message": "Alert set successfully"}
+        alert_value_formatted = "{:,.2f}".format(alert.value)
+        message = {"message": f"Alert set successfully. Alert value: {alert_value_formatted}"}
         return message
     except Exception as e:
         error_message = str(e)

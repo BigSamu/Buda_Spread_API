@@ -18,7 +18,7 @@ app = FastAPI(
     version="1.0.0",
     contact={
         "name": "Samuel Valdes Gutierrez",
-        # "email": "valdesgutierrez@gmail.com",
+        "email": "valdesgutierrez@gmail.com",
         "github": "https://github.com/BigSamu",
     },
     terms_of_service="http://api.buda.com/terms/",
@@ -26,8 +26,8 @@ app = FastAPI(
         "name": "MIT",
         "url": "https://opensource.org/licenses/MIT",
     },
-    docs_url="/api/docs",
-    redoc_url=None,  # Set to None if you don't want to use ReDoc
+    docs_url="/api/docs", # This is the default URL for the Swagger UI
+    redoc_url="/api/redoc", # This is the default URL for the ReDoc UI
 )
 
 

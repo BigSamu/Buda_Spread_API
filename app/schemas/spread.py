@@ -9,4 +9,4 @@ class SpreadResponse(BaseModel):
 
 
 class SpreadAlert(BaseModel):
-    value: str
+    value: float
