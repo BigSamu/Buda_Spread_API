@@ -64,4 +64,3 @@ class TestFormatSpreadDict:
             format_spread_dict(invalid_spread_dict)
         assert "Error formatting spread for market market3" in str(excinfo.value)
 
-    # Additional tests can be added to cover more edge cases
