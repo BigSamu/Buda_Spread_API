@@ -1,19 +1,21 @@
 from typing import Dict
 from app.services import buda_api
 
-def calculate_spread(min_ask: str, max_bid: str, market_id: str) -> Dict[str, str]:
+
+def calculate_spread(ticker: Dict[str, str]) -> Dict[str, str]:
     """
     Calculate the spread for a given market ID.
 
     **Args:**
 
-        - min_ask (str): The minimum ask price for the market.
-        - max_bid (str): The maximum bid price for the market.
-        - market_id (str): The unique identifier of the market for which the spread is calculated.
+        - ticker_dict (Dict[str, str]): A dictionary containing the following ticker data:
+            - 'min_ask': A list containing the minimum ask price and currency for the market, e.g., ["30000.01", "ARS"].
+            - 'max_bid': A list containing the maximum bid price and currency for the market, e.g., ["29990.0", "ARS"].
+            - 'market_id': The unique identifier of the market, e.g., "BCH-ARS".
 
     **Returns:**
 
-        Dict[str, str]: A dictionary containing the following:
+        current_spread (Dict[str, str]): A dictionary containing the following:
 
             - 'min_ask': The minimum ask price for the market.
             - 'max_bid': The maximum bid price for the market.
@@ -26,17 +28,19 @@ def calculate_spread(min_ask: str, max_bid: str, market_id: str) -> Dict[str, st
     """
 
     try:
-        min_ask_num = (float)(min_ask)
-        max_bid_num = (float)(max_bid)
-        spread_dict = {
-            "min_ask": min_ask_num,
-            "max_bid": max_bid_num,
-            "value": min_ask_num - max_bid_num,
-            "market_id": market_id,
+        min_ask = (float)(ticker["min_ask"][0])
+        max_bid = (float)(ticker["max_bid"][0])
+        current_spread = {
+            "min_ask": min_ask,
+            "max_bid": max_bid,
+            "value": min_ask - max_bid,
+            "market_id": ticker["market_id"],
         }
-        return spread_dict
+        return current_spread
     except ValueError as e:
-        raise ValueError(f"Error calculating spread for market {market_id}: {str(e)}")
+        raise ValueError(
+            f"Error calculating spread for market {ticker['market_id']}: {str(e)}"
+        )
 
 
 def compare_spread_with_alert_value(
@@ -53,7 +57,7 @@ def compare_spread_with_alert_value(
 
     **Returns:**
 
-        message (Dict[str, str]): A dictionary containing the following:
+        alert_details (Dict[str, str]): A dictionary containing the following:
 
             - is_greater (bool): A boolean indicating whether the spread is greater than the alert value.
             - is_less (bool): A boolean indicating whether the spread is less than the alert value.
@@ -65,37 +69,37 @@ def compare_spread_with_alert_value(
 
     **Raises:**
 
-        A ValueError will be raised if the spread value or alert value cannot be converted to a float.
+        - ValueError: if spread value or alert value cannot be converted to a float.
+        - KeyError: if spread value or alert value is not found in the input dictionary.
     """
     try:
         spread_value = (float)(spread_value)
         alert_value = (float)(alert_value)
-        diff = spread_value - alert_value
-        alert_dict = {
-            "spread_value": spread_value,
-            "alert_value": alert_value,
-            "diff": diff,
-        }
-        alert_dict_formatted = {
-            "spread_value": "{:,.2f}".format(alert_dict["spread_value"]),
-            "alert_value": "{:,.2f}".format(alert_dict["alert_value"]),
-            "diff": "{:,.2f}".format(abs(alert_dict["diff"])),
-        }
+        diff_spread_alert_value = spread_value - alert_value
 
-        if diff > 0:
-            message = f"Spread for market {market_id} is GREATER than the alert value by {alert_dict_formatted['diff']}."
-        elif diff < 0:
-            message = f"Spread for market {market_id} is LESS than the alert value by {alert_dict_formatted['diff']}."
+        spread_value_formatted = "{:,.2f}".format(spread_value)
+        alert_value_formatted = "{:,.2f}".format(alert_value)
+        diff_spread_alert_value_formatted = "{:,.2f}".format(
+            abs(diff_spread_alert_value)
+        )
+
+        if diff_spread_alert_value > 0:
+            alert_message = f"Spread for market {market_id} is GREATER than the alert value by {diff_spread_alert_value_formatted}."
+        elif diff_spread_alert_value < 0:
+            alert_message = f"Spread for market {market_id} is LESS than the alert value by {diff_spread_alert_value_formatted}."
         else:
-            message = f"Spread is for market {market_id} is EQUAL to the alert value."
+            alert_message = (
+                f"Spread is for market {market_id} is EQUAL to the alert value."
+            )
 
-        message += f" Spread Value: {alert_dict_formatted['spread_value']}, Alert Value: {alert_dict_formatted['alert_value']}"
+        alert_message += f" Spread Value: {spread_value_formatted}, Alert Value: {alert_value_formatted}"
 
-        message_obj = {
-            "is_greater": diff > 0,
-            "is_less": diff < 0,
-            "message": message
+        alert_details = {
+            "is_greater": diff_spread_alert_value > 0,
+            "is_less": diff_spread_alert_value < 0,
+            "message": alert_message,
         }
-        return message_obj
+        return alert_details
+
     except ValueError as e:
-        raise ValueError(f"Error calculating spread for market {market_id}: {str(e)}")
+        raise ValueError(f"Error formatting spread for market {market_id}: {str(e)}")

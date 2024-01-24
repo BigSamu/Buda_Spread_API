@@ -9,15 +9,19 @@ uvicorn = "*"
 pydantic = "*"
 pydantic-settings = "*"
 requests = "*"
+email-validator = "*"
 
 [dev-packages]
 black = "*"
 pytest = "*"
 coverage = "*"
+pytest-mock = "*"
+httpx = "*"
 
 [scripts]
 start = "uvicorn app.main:app --reload"
 test = "pytest"
+coverage = "./run_coverage.sh"
 
 [requires]
 python_version = "3.9"

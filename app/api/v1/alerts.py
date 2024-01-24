@@ -11,6 +11,7 @@ from app.utils import calculate_spread, compare_spread_with_alert_value
 router = APIRouter()
 spread_alert = {"value": None}
 
+
 @router.get(
     "",
     response_model=Dict[str, schemas.AlertMessage],
@@ -42,13 +43,14 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
     **Raises:**
 
         HTTPException:
+
             - 404 (Not Found): If the market is not found.
             - 500 (Internal Server Error): For any other unexpected error.
     """
 
     if not spread_alert["value"]:
         raise HTTPException(
-            status_code=404, detail="Spread Alert not set yet. Please one first."
+            status_code=404, detail="Spread Alert not set yet. Please set one first."
         )
 
     try:
@@ -56,11 +58,16 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
         alert_value = spread_alert["value"]
         message_alerts = {}
         for market in markets["markets"]:
-            ticker = buda_api.tickers.get_one_by_market_id(market_id=market["id"]).dict()
-            current_spread = calculate_spread(**ticker)
-            spread_value = current_spread["value"]
-            message = compare_spread_with_alert_value(spread_value, alert_value, market["id"])
-            message_alerts[market["id"]] = message
+            ticker = buda_api.tickers.get_one_by_market_id(market_id=market["id"])[
+                "ticker"
+            ]
+            current_spread = calculate_spread(ticker)
+            message_alert = compare_spread_with_alert_value(
+                spread_value=current_spread["value"],
+                alert_value=spread_alert["value"],
+                market_id=market["id"],
+            )
+            message_alerts[market["id"]] = message_alert
         return message_alerts
 
     except HTTPError as http_err:
@@ -77,13 +84,13 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
             detail=f"An unexpected error occurred: {error_name}: {error_message}",
         )
 
+
 @router.get(
     "/{market_id}",
     response_model=schemas.AlertMessage,
     responses={
         404: {"model": schemas.ErrorResponse, "description": "Not Found"},
         500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
-        422: {"model": schemas.ErrorResponse, "description": "Unprocessable Entity"},
     },
 )
 async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
@@ -109,6 +116,7 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
     **Raises:**
 
         HTTPException:
+
             - 404 (Not Found): If the market is not found.
             - 500 (Internal Server Error): For any other unexpected error.
             - 422 (Unprocessable Entity): If the request data is invalid or cannot be processed.
@@ -116,15 +124,17 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
 
     if not spread_alert["value"]:
         raise HTTPException(
-            status_code=404, detail="Spread Alert not set yet. Please one first."
+            status_code=404, detail="Spread Alert not set yet. Please set one first."
         )
 
     try:
-        market = buda_api.markets.get_one_by_id(market_id=market_id)
-        alert_value = spread_alert["value"]
-        current_spread = calculate_spread(market_id=market_id)
-        spread_value = current_spread["value"]
-        message_alert = compare_spread_with_alert_value(spread_value, alert_value, market_id)
+        ticker = buda_api.tickers.get_one_by_market_id(market_id=market_id)["ticker"]
+        current_spread = calculate_spread(ticker)
+        message_alert = compare_spread_with_alert_value(
+            spread_value=current_spread["value"],
+            alert_value=spread_alert["value"],
+            market_id=market_id,
+        )
         return message_alert
 
     except HTTPError as http_err:
@@ -148,7 +158,6 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
     responses={
         404: {"model": schemas.ErrorResponse, "description": "Not Found"},
         500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
-        422: {"model": schemas.ErrorResponse, "description": "Unprocessable Entity"},
     },
 )
 async def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
@@ -169,14 +178,17 @@ async def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
     **Raises:**
 
         HTTPException:
+
             - 404 (Not Found): If the market is not found.
             - 500 (Internal Server Error): For any other unexpected error.
             - 422 (Unprocessable Entity): If the request data is invalid or cannot be processed.
     """
     try:
-        spread_alert["value"]=alert.value
+        spread_alert["value"] = alert.value
         alert_value_formatted = "{:,.2f}".format(alert.value)
-        message = {"message": f"Alert set successfully. Alert value: {alert_value_formatted}"}
+        message = {
+            "message": f"Alert set successfully. Alert value: {alert_value_formatted}"
+        }
         return message
     except Exception as e:
         error_message = str(e)

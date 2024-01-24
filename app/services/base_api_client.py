@@ -24,4 +24,7 @@ class BaseAPIClient:
             HTTPError: If the response contains an HTTP error status.
         """
         response = requests.get(f"{self.base_url}/{path}")
-        return response.json() if response.ok else response.raise_for_status()
+        if response.ok:
+            return response.json()
+        else:
+            response.raise_for_status()

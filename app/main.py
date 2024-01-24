@@ -26,8 +26,8 @@ app = FastAPI(
         "name": "MIT",
         "url": "https://opensource.org/licenses/MIT",
     },
-    docs_url="/api/docs", # This is the default URL for the Swagger UI
-    redoc_url="/api/redoc", # This is the default URL for the ReDoc UI
+    docs_url="/api/docs",  # This is the default URL for the Swagger UI
+    redoc_url="/api/redoc",  # This is the default URL for the ReDoc UI
 )
 
 

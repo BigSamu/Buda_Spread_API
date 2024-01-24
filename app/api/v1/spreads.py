@@ -1,12 +1,15 @@
 import traceback
 from typing import Any, List, Dict
+import json
 
-from fastapi import APIRouter, HTTPException, status, Path, Body
+from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import Response, JSONResponse
+from pydantic import ValidationError
 from requests.exceptions import HTTPError
 
 from app import schemas
 from app.services import buda_api
-from app.utils import calculate_spread, format_spread_dict
+from app.utils import calculate_spread, format_current_spread
 
 router = APIRouter()
 
@@ -34,29 +37,30 @@ def get_all_spreads() -> List[schemas.SpreadResponse]:
     **Raises:**
 
         HTTPException:
+
             - 500 (Internal Server Error): For any other unexpected error.
     """
     try:
         all_spreads = []
         markets = buda_api.markets.get_all()
         for market in markets["markets"]:
-            ticker = buda_api.tickers.get_one_by_market_id(market_id=market["id"])["ticker"]
-            spread_dict = calculate_spread(
-                min_ask=ticker["min_ask"],
-                max_bid=ticker["max_bid"],
-                market_id=market["id"]
-            )
-            spread_obj = schemas.SpreadResponse(**format_spread_dict(spread_dict))
-            all_spreads.append(spread_obj)
+            #
+            ticker = schemas.TickerResponse(
+                **buda_api.tickers.get_one_by_market_id(market_id=market["id"])["ticker"]
+            ).model_dump()
+            current_spread = calculate_spread(ticker=ticker)
+            current_spread_formatted = format_current_spread(current_spread)
+            all_spreads.append(schemas.SpreadResponse(**current_spread_formatted))
         return all_spreads
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Given data from Buda API is invalid. {str(e)}",
-        )
-    except Exception as e:
-        error_message = str(e)
-        error_name = e.__class__.__name__
+
+    except ValidationError as e:
+        # Create a response similar to FastAPI's default 422 error response
+        error_details = json.loads(e.json())
+        raise HTTPException(status_code=422, detail={"detail": error_details})
+
+    except HTTPError as http_err:
+        error_message = str(http_err)
+        error_name = http_err.__class__.__name__
         print(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -92,34 +96,33 @@ async def get_spread_by_market_id(market_id: str) -> Any:
     **Raises:**
 
         HTTPException:
+
             - 404 (Not Found): If the market is not found.
-            - 500 (Internal Server Error): For any other unexpected error.
             - 422 (Unprocessable Entity): If the request data is invalid or cannot be processed.
+            - 500 (Internal Server Error): For any other unexpected error.
 
     """
 
     try:
-        ticker = buda_api.tickers.get_one_by_id(market_id=market_id)["ticker"]
-        spread_dict = calculate_spread(
-                min_ask=ticker["min_ask"],
-                max_bid=ticker["max_bid"],
-                market_id=market["id"]
-            )
-        spread_obj = schemas.SpreadResponse(**format_spread_dict(spread_dict))
-        return spread_obj
-    except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Given data from Buda API is invalid. {str(e)}",
-        )
+        ticker = buda_api.tickers.get_one_by_market_id(market_id=market_id)["ticker"]
+        current_spread = calculate_spread(ticker=ticker)
+        current_spread_formatted = format_current_spread(current_spread)
+        return schemas.SpreadResponse(**current_spread_formatted)
+
+    except ValidationError as e:
+        # Create a response similar to FastAPI's default 422 error response
+        error_details = json.loads(e.json())
+        raise HTTPException(status_code=422, detail={"detail": error_details})
+
     except HTTPError as http_err:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=str(f"Market with id '{market_id}' not found"),
-        )
-    except Exception as e:
-        error_message = str(e)
-        error_name = e.__class__.__name__
+        if http_err.response and http_err.response.status_code == 404:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=str(f"Market with id '{market_id}' not found"),
+            )
+        else:
+            error_message = str(http_err)
+        error_name = http_err.__class__.__name__
         print(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

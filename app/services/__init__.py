@@ -1,6 +1,7 @@
 from app.services.markets import MarketService
 from app.services.tickers import TickerService
 
+
 class BudaAPI:
     def __init__(self):
         self.markets = MarketService()
