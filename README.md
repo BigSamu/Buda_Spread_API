@@ -1,6 +1,6 @@
 <a name="back-to-top"></a>
 
-# SuperhereoAPI Simulation
+# Buda Spread API
 
 <!-- *********************************************************************** -->
 <!-- I) ABOUT THE PROJECT -->
