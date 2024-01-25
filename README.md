@@ -111,7 +111,7 @@ To get a copy of this project and run it in your local environment, follow the s
 
 ### Usage
 
-After successful installation in your local environment, you can run the API running the command `pipenv run start`. Once done you can test the API either using [Postman](https://www.postman.com/) or by visiting the Swagger UI documentation at (http://localhost:8000/api/docs)[http://localhost:8000/api/docs]
+After successful installation in your local environment, you can run the API running the command `pipenv run start`. Once done you can test the API either using [Postman](https://www.postman.com/) or by visiting the Swagger UI documentation at [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
 
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
