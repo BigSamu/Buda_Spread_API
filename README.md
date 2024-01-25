@@ -17,7 +17,7 @@ The API supports polling to determine if the current spread is above or below th
 
 The service has been deployed in [Vercel](https://vercel.com) and configured with documentation with two user interfaces
 
-- **SwaggerUI** served at [https://buda-spread-api-sandy.vercel.app/api/docs](https://spread-api-sandy.vercel.app/api/doc)
+- **SwaggerUI** served at [https://buda-spread-api-sandy.vercel.app/api/docs](https://buda-spread-api-sandy.vercel.app/api/docs)
 - **ReDoc** served at [https://buda-spread-api-sandy.vercel.app/api/redoc](https://spread-api-sandy.vercel.app/api/redoc)
 
 ---
