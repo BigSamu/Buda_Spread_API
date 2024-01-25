@@ -103,11 +103,6 @@ To get a copy of this project and run it in your local environment, follow the s
    pipenv shell
    ```
 
-6. Run application
-   ```sh
-   python -m app.main [-email <email address>]
-   ```
-
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
 
 <!-- ----------------------------------------------------------------------- -->
@@ -120,10 +115,17 @@ After successful installation in your local environment, you can run the API run
 
 If you prefer to use [Docker](https://www.docker.com/) in your local environment please run `docker-compose up -d`. Then you can use [Postman](https://www.postman.com/) or visit the Swagger UI URL given above.
 
-
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
 
 ---
+
+<!-- ----------------------------------------------------------------------- -->
+<!-- 3.4) Testing -->
+<!-- ----------------------------------------------------------------------- -->
+
+### Testing and Coverage
+
+For checking unit tests in the developed API you can run `pipenv run test`. Likewise, for checking the coverage of those tests, you can run `pipenv run coverage`
 
 ## Contact Me
 
