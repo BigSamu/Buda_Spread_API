@@ -136,9 +136,7 @@ Feel free to contact me if you have any doubt!
 Samuel Valdes Gutierrez
 
 [![Gmail][gmail-badge]][gmail-url]
-[![Twitter][twitter-badge]][twitter-url]
 [![LinkedIn][linkedin-badge]][linkedin-url]
-[![HackerRank][hackerrank-badge]][hackerrank-url]
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
 
