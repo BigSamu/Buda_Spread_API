@@ -120,6 +120,35 @@ If you prefer to use [Docker](https://www.docker.com/) in your local environment
 
 ---
 
+## Contact Me
+
+<!-- ![GitHub Follow](https://img.shields.io/github/followers/BigSamu.svg?style=social&label=Follow)
+![GitHub Star](https://img.shields.io/github/stars/BigSamu?affiliations=OWNER%2CCOLLABORATOR&style=social&label=Star) -->
+
+Feel free to contact me if you have any doubt!
+
+Samuel Valdes Gutierrez
+
+[![Gmail][gmail-badge]][gmail-url]
+[![Twitter][twitter-badge]][twitter-url]
+[![LinkedIn][linkedin-badge]][linkedin-url]
+[![HackerRank][hackerrank-badge]][hackerrank-url]
+
+<p align="right">(<a href="#back-to-top">back to top</a>)</p>
+
+---
+
+## License
+
+This project is licensed under the terms of the MIT license.
+
+> You can check out the full license [here](./LICENSE.md)
+
+<p align="right">(<a href="#back-to-top">back to top</a>)</p>
+
+---
+
+
 <!-- *********************************************************************** -->
 <!-- VIII) FOOTER -->
 <!-- *********************************************************************** -->
@@ -127,3 +156,37 @@ If you prefer to use [Docker](https://www.docker.com/) in your local environment
 <p align="center">
 Developed with ❤️ in Chile 🇨🇱
 </p>
+
+<!-- *********************************************************************** -->
+<!-- A) MARKDOWN LINKS & IMAGES -->
+<!-- *********************************************************************** -->
+
+<!-- ----------------------------------------------------------------------- -->
+<!-- Contact -->
+<!-- ----------------------------------------------------------------------- -->
+
+<!-- Gmail -->
+[gmail-badge]: https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white
+[gmail-url]: mailto:valdesgutierrez@gmail.com
+
+<!-- Twitter -->
+[twitter-badge]: https://img.shields.io/badge/Twitter-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white
+[twitter-url]: https://twitter.com/BigSamu5
+
+<!-- LinkedIn -->
+[linkedin-badge]: https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white
+[linkedin-badge-small]: https://img.shields.io/badge/--linkedin?label=LinkedIn&logo=LinkedIn&style=social
+[linkedin-url]: https://www.linkedin.com/in/samuel-valdes-gutierrez
+
+<!-- HackerRank -->
+[hackerrank-badge]: https://img.shields.io/badge/-Hackerrank-2EC866?style=for-the-badge&logo=HackerRank&logoColor=white
+[hackerrank-badge-small]: https://img.shields.io/badge/--hackerrank?label=HackerRank&logo=hackerrank&style=social
+[hackerrank-url]: https://www.hackerrank.com/BigSamu
+
+<!-- Ask Me Anything -->
+[ama-badge]: https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg
+[ama-url]: #contact-me
+
+<!-- Say Thanks -->
+[say-thanks-badge]: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
+[say-thanks-url]: https://saythanks.io/to/BigSamu
