@@ -33,11 +33,11 @@ The following technologies are used for the implementation of this project:
 ![Python Badge](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff&style=for-the-badge)
 ![PyPI Badge](https://img.shields.io/badge/PyPI-3775A9?logo=pypi&logoColor=fff&style=for-the-badge)
 ![FastAPI Badge](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=fff&style=for-the-badge)
-![Docker Badge](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=for-the-badge)
-![Vercel Badge](https://img.shields.io/badge/Vercel-000?logo=vercel&logoColor=fff&style=for-the-badge)
+![Postman Badge](https://img.shields.io/badge/Postman-FF6C37?logo=postman&logoColor=fff&style=for-the-badge)
 ![Swagger Badge](https://img.shields.io/badge/Swagger-85EA2D?logo=swagger&logoColor=000&style=for-the-badge)
 <img src="https://raw.githubusercontent.com/Redocly/redoc/main/docs/images/redoc.png" alt="Swagger Badge" style="height: 28px; width: auto;">
-
+![Docker Badge](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=for-the-badge)
+![Vercel Badge](https://img.shields.io/badge/Vercel-000?logo=vercel&logoColor=fff&style=for-the-badge)
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
 
@@ -63,6 +63,8 @@ For easy management of packages and environment `pipenv` is used. To install thi
 pip3 install pipenv
 ```
 
+If you want to run the API using [Docker](https://www.docker.com/) in your local environemnt, then `docker` and `docker-compose` will be required. The best and easiest way to install Docker in your local environment is by installing [Docker Desktop](https://docs.docker.com/desktop/).
+
 <!-- 3.2) Installation -->
 <!-- ----------------------------------------------------------------------- -->
 
@@ -72,24 +74,26 @@ To get a copy of this project and run it in your local environment, follow the s
 
 1. Clone the repo
    ```sh
-   git clone git@github.com:BigSamu/SuperhereoAPI_Simulation.git
+   git clone git@github.com:BigSamu/Buda_Spread_API.git
    ```
 2. Go into the repository
    ```sh
-   cd SuperhereoAPI_Simulation
+   cd Buda_Spread_API
    ```
-3. Install required pyhon packages or dependencies
+3. Install required python packages or dependencies
    ```sh
    pipenv install
    ```
-4. Create a .env file and add the following related API Keys and Domains
+4. Create a .env file and add the following related environmental variables
 
    ```sh
-   SUPERHERO_API_KEY=[YOUR_SUPERHERO_API_KEY]
-   MAILGUN_API_KEY=[YOUR_MAILGUN_API_KEY]
-   MAILGUN_DOMAIN_NAME=[YOUR_MAILGUN_DOMAIN_NAME]
+   BUDA_API_SECRET=[YOUR_MAILGUN_API_KEY]
+   BUDA_API_KEY=[YOUR_MAILGUN_DOMAIN_NAME]
    ```
-5. Activate virtual environemnt
+
+  To create these variables please visit the related Buda API documentation in this [link](https://api.buda.com/en/#rest-api-private-endpoints)
+
+5. Activate virtual environment
    ```sh
    pipenv shell
    ```
@@ -107,9 +111,8 @@ To get a copy of this project and run it in your local environment, follow the s
 
 ### Usage
 
-After successful installation and execution, you will be able to experience the simulation in your terminal. If an email address is provided, you will receive the results of the simulation in your email.
+After successful installation in your local environment, you can run the API running the command `pipenv run start`. Once done you can test the API either using [Postman](https://www.postman.com/) or by visiting the Swagger UI documentation at (http://localhost:8000/api/docs)[http://localhost:8000/api/docs]
 
-> **NOTE:** The email address provided has to be registered in your domain in Mailgun API, so the script can send the results of the simulation that particular email.
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
 
