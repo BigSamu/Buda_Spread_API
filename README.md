@@ -63,7 +63,7 @@ For easy management of packages and environment `pipenv` is used. To install thi
 pip3 install pipenv
 ```
 
-If you want to run the API using [Docker](https://www.docker.com/) in your local environemnt, then `docker` and `docker-compose` will be required. The best and easiest way to install Docker in your local environment is by installing [Docker Desktop](https://docs.docker.com/desktop/).
+If you want to run the API using [Docker](https://www.docker.com/) in your local environment, then `docker` and `docker-compose` will be required. The best and easiest way to install Docker in your local environment is by installing [Docker Desktop](https://docs.docker.com/desktop/).
 
 <!-- 3.2) Installation -->
 <!-- ----------------------------------------------------------------------- -->
@@ -112,6 +112,8 @@ To get a copy of this project and run it in your local environment, follow the s
 ### Usage
 
 After successful installation in your local environment, you can run the API running the command `pipenv run start`. Once done you can test the API either using [Postman](https://www.postman.com/) or by visiting the Swagger UI documentation at [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
+
+If you prefer to use [Docker](https://www.docker.com/) in your local environment please run `docker-compose up -d`. Then you can use [Postman](https://www.postman.com/) or visit the Swagger UI url given above.
 
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
