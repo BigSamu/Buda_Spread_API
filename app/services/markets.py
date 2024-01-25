@@ -2,6 +2,7 @@ from typing import Dict, Any
 
 from app.services.base_api_client import BaseAPIClient
 
+
 class MarketService(BaseAPIClient):
     def get_all(self) -> Dict[str, Any]:
         """

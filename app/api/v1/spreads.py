@@ -57,13 +57,12 @@ def get_all_spreads() -> List[schemas.SpreadResponse]:
         return all_spreads
 
     except ValidationError as e:
-        # Create a response similar to FastAPI's default 422 error response
         error_details = json.loads(e.json())
         raise HTTPException(status_code=422, detail={"detail": error_details})
 
-    except HTTPError as http_err:
-        error_message = str(http_err)
-        error_name = http_err.__class__.__name__
+    except Exception as err:
+        error_message = str(err)
+        error_name = err.__class__.__name__
         print(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -115,21 +114,19 @@ async def get_spread_by_market_id(market_id: str) -> Any:
         return schemas.SpreadResponse(**current_spread_formatted)
 
     except ValidationError as e:
-        # Create a response similar to FastAPI's default 422 error response
         error_details = json.loads(e.json())
-        print(error_details)
         raise HTTPException(status_code=422, detail={"detail": error_details})
 
-    except HTTPError as http_err:
-        print(http_err.response)
-        if http_err.response is not None and http_err.response.status_code == 404:
+    except Exception as err:
+
+        if isinstance(err, HTTPError) and err.response.status_code == 404:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=str(f"Market with id '{market_id}' not found"),
             )
-        else:
-            error_message = str(http_err)
-        error_name = http_err.__class__.__name__
+
+        error_message = str(err)
+        error_name = err.__class__.__name__
         print(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

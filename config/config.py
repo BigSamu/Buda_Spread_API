@@ -3,6 +3,7 @@ from typing import Optional
 from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
     # PATH SETTINGS
     API_URL_PREFIX: str = "api/v1"

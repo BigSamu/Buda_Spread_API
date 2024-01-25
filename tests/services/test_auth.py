@@ -7,24 +7,26 @@ from app.services.auth import BudaHMACAuth
 
 
 @pytest.fixture
-def api_key(self):
+def api_key():
     return "test_api_key"
 
+
 @pytest.fixture
-def secret(self):
+def secret():
     return "test_secret"
 
+
 @pytest.fixture
-def auth_instance(self, api_key, secret):
+def auth_instance(api_key, secret):
     return BudaHMACAuth(api_key, secret)
 
-class TestBudaHMACAuth:
 
+class TestBudaHMACAuth:
     def test_buda_hmac_auth_init_correctly(self, auth_instance, api_key, secret):
         assert auth_instance.api_key == api_key
         assert auth_instance.secret == secret
 
-    @patch('app.services.auth.time')  # Corrected to the actual module name
+    @patch("app.services.auth.time")  # Corrected to the actual module name
     def test_get_nonce_method_return_correct_nonce(self, mock_time, auth_instance):
         mock_time.time.return_value = 1234567
         expected_nonce = str(int(1234567 * 1e6))
@@ -44,7 +46,7 @@ class TestBudaHMACAuth:
         expected_signature = hmac.new(
             key=auth_instance.secret.encode(),
             msg=expected_msg.encode(),
-            digestmod="sha384"
+            digestmod="sha384",
         ).hexdigest()
 
         assert signature == expected_signature
@@ -65,7 +67,7 @@ class TestBudaHMACAuth:
         expected_signature = hmac.new(
             key=auth_instance.secret.encode(),
             msg=expected_msg.encode(),
-            digestmod="sha384"
+            digestmod="sha384",
         ).hexdigest()
 
         assert signature == expected_signature
@@ -83,5 +85,3 @@ class TestBudaHMACAuth:
         assert "X-SBTC-NONCE" in modified_request.headers
         assert "X-SBTC-SIGNATURE" in modified_request.headers
         assert modified_request.headers["X-SBTC-APIKEY"] == auth_instance.api_key
-
-    
