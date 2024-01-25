@@ -2,11 +2,10 @@
 
 # Buda Spread API
 
+[![Github Follow][github-follow-badge]][github-follow-url]
+[![Ask Me Anything][ama-badge]][ama-url]
+[![Say Thanks!][say-thanks-badge]][say-thanks-url]
 [![License][license-badge]][license-url]
-[![Forks][forks-badge]][forks-url]
-[![Stars][stars-badge]][stars-url]
-[![Watchers][watchers-badge]][watchers-url]
-
 
 <!-- *********************************************************************** -->
 <!-- I) ABOUT THE PROJECT -->
@@ -187,23 +186,8 @@ Developed with ❤️ in Chile 🇨🇱
 [say-thanks-url]: https://saythanks.io/to/BigSamu
 
 <!-- ----------------------------------------------------------------------- -->
-<!-- A.2) Github Stats -->
+<!-- GitHub
 <!-- ----------------------------------------------------------------------- -->
-
-<!-- Forks -->
-
-[forks-badge]: https://img.shields.io/github/forks/BigSamu/Buda_Spread_API.svg
-[forks-url]: https://github.com/BigSamu/Buda_Spread_API/network/members
-
-<!-- Stargazers -->
-
-[stars-badge]: https://img.shields.io/github/stars/BigSamu/Buda_Spread_API.svg
-[stars-url]: https://github.com/BigSamu/Buda_Spread_API/stargazers
-
-<!-- Watchers -->
-
-[watchers-badge]: https://img.shields.io/github/watchers/BigSamu/Buda_Spread_API.svg
-[watchers-url]: https://github.com/BigSamu/Buda_Spread_API/watchers
 
 <!-- License -->
 
