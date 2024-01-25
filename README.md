@@ -15,7 +15,7 @@ This API is designed for Buda.com to calculate and manage the spread across vari
 
 The API supports polling to determine if the current spread is above or below these thresholds.
 
-The service has been configured with documentation user interfaces included
+The service has been deployed in [Vercel](https://vercel.com) and configured with documentation with two user interfaces
 
 - **SwaggerUI** served at [https://spread-api-sandy.vercel.app/api/doc](https://spread-api-sandy.vercel.app/api/doc)
 - **ReDoc** served at [https://spread-api-sandy.vercel.app/api/redoc](https://spread-api-sandy.vercel.app/api/redoc)
@@ -34,6 +34,7 @@ The following technologies are used for the implementation of this project:
 ![PyPI Badge](https://img.shields.io/badge/PyPI-3775A9?logo=pypi&logoColor=fff&style=for-the-badge)
 ![FastAPI Badge](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=fff&style=for-the-badge)
 ![Docker Badge](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=for-the-badge)
+![Vercel Badge](https://img.shields.io/badge/Vercel-000?logo=vercel&logoColor=fff&style=for-the-badge)
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
 
@@ -51,15 +52,13 @@ The following technologies are used for the implementation of this project:
 
 ### Prerequisites
 
-`Python3` and a `pip3` are required for the setup of this simulation.
+For setting up your local environment `Python3` and a `pip3` are required for running the API locally.
 
-For easy management of packages and environments `pipenv` is used. For installing this tool globally run:
+For easy management of packages and environment `pipenv` is used. To install this tool globally run:
 
 ```sh
 pip3 install pipenv
 ```
-
-> **NOTE:** At the time of the implementation of this project, `Python v3.10.11`, `pip v23.0` and `pipenv v2023.2.4` were used.
 
 <!-- 3.2) Installation -->
 <!-- ----------------------------------------------------------------------- -->
