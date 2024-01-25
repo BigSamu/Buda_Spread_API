@@ -38,15 +38,18 @@ def get_all_spreads() -> List[schemas.SpreadResponse]:
 
         HTTPException:
 
+            - 422 (Unprocessable Entity): If the request data is invalid or cannot be processed.
             - 500 (Internal Server Error): For any other unexpected error.
     """
     try:
         all_spreads = []
         markets = buda_api.markets.get_all()
         for market in markets["markets"]:
-            #
+            market = schemas.MarketResponse(**market).model_dump()
             ticker = schemas.TickerResponse(
-                **buda_api.tickers.get_one_by_market_id(market_id=market["id"])["ticker"]
+                **buda_api.tickers.get_one_by_market_id(market_id=market["id"])[
+                    "ticker"
+                ]
             ).model_dump()
             current_spread = calculate_spread(ticker=ticker)
             current_spread_formatted = format_current_spread(current_spread)
@@ -104,7 +107,9 @@ async def get_spread_by_market_id(market_id: str) -> Any:
     """
 
     try:
-        ticker = buda_api.tickers.get_one_by_market_id(market_id=market_id)["ticker"]
+        ticker = schemas.TickerResponse(
+            **buda_api.tickers.get_one_by_market_id(market_id=market_id)["ticker"]
+        ).model_dump()
         current_spread = calculate_spread(ticker=ticker)
         current_spread_formatted = format_current_spread(current_spread)
         return schemas.SpreadResponse(**current_spread_formatted)
@@ -112,10 +117,12 @@ async def get_spread_by_market_id(market_id: str) -> Any:
     except ValidationError as e:
         # Create a response similar to FastAPI's default 422 error response
         error_details = json.loads(e.json())
+        print(error_details)
         raise HTTPException(status_code=422, detail={"detail": error_details})
 
     except HTTPError as http_err:
-        if http_err.response and http_err.response.status_code == 404:
+        print(http_err.response)
+        if http_err.response is not None and http_err.response.status_code == 404:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=str(f"Market with id '{market_id}' not found"),
