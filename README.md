@@ -37,7 +37,7 @@ The following technologies are used for the implementation of this project:
 ![Vercel Badge](https://img.shields.io/badge/Vercel-000?logo=vercel&logoColor=fff&style=for-the-badge)
 ![Swagger Badge](https://img.shields.io/badge/Swagger-85EA2D?logo=swagger&logoColor=000&style=for-the-badge)
 
-<img src="https://raw.githubusercontent.com/Redocly/redoc/main/docs/images/redoc.png" alt="Swagger Badge" height={28}>
+<img src="https://raw.githubusercontent.com/Redocly/redoc/main/docs/images/redoc.png" alt="Swagger Badge" style="height: 28px; width: auto;">
 
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
