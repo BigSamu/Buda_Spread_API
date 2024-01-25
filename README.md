@@ -2,6 +2,12 @@
 
 # Buda Spread API
 
+[![License][license-badge]][license-url]
+[![Forks][forks-badge]][forks-url]
+[![Stars][stars-badge]][stars-url]
+[![Watchers][watchers-badge]][watchers-url]
+
+
 <!-- *********************************************************************** -->
 <!-- I) ABOUT THE PROJECT -->
 <!-- *********************************************************************** -->
@@ -169,19 +175,10 @@ Developed with ❤️ in Chile 🇨🇱
 [gmail-badge]: https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white
 [gmail-url]: mailto:valdesgutierrez@gmail.com
 
-<!-- Twitter -->
-[twitter-badge]: https://img.shields.io/badge/Twitter-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white
-[twitter-url]: https://twitter.com/BigSamu5
-
 <!-- LinkedIn -->
 [linkedin-badge]: https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedin-badge-small]: https://img.shields.io/badge/--linkedin?label=LinkedIn&logo=LinkedIn&style=social
 [linkedin-url]: https://www.linkedin.com/in/samuel-valdes-gutierrez
-
-<!-- HackerRank -->
-[hackerrank-badge]: https://img.shields.io/badge/-Hackerrank-2EC866?style=for-the-badge&logo=HackerRank&logoColor=white
-[hackerrank-badge-small]: https://img.shields.io/badge/--hackerrank?label=HackerRank&logo=hackerrank&style=social
-[hackerrank-url]: https://www.hackerrank.com/BigSamu
 
 <!-- Ask Me Anything -->
 [ama-badge]: https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg
@@ -190,3 +187,32 @@ Developed with ❤️ in Chile 🇨🇱
 <!-- Say Thanks -->
 [say-thanks-badge]: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
 [say-thanks-url]: https://saythanks.io/to/BigSamu
+
+<!-- ----------------------------------------------------------------------- -->
+<!-- A.2) Github Stats -->
+<!-- ----------------------------------------------------------------------- -->
+
+<!-- Forks -->
+
+[forks-badge]: https://img.shields.io/github/forks/BigSamu/Buda_Spread_API.svg
+[forks-url]: https://github.com/BigSamu/Buda_Spread_API/network/members
+
+<!-- Stargazers -->
+
+[stars-badge]: https://img.shields.io/github/stars/BigSamu/Buda_Spread_API.svg
+[stars-url]: https://github.com/BigSamu/Buda_Spread_API/stargazers
+
+<!-- Watchers -->
+
+[watchers-badge]: https://img.shields.io/github/watchers/BigSamu/Buda_Spread_API.svg
+[watchers-url]: https://github.com/BigSamu/Buda_Spread_API/watchers
+
+<!-- License -->
+
+[license-badge]: https://img.shields.io/badge/license-MIT-green
+[license-url]: ./LICENSE.md
+
+<!-- Follow -->
+
+[github-follow-badge]: https://img.shields.io/github/followers/BigSamu.svg?style=social&label=Follow
+[github-follow-url]: https://github.com/BigSamu?tab=followers
