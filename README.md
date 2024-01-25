@@ -35,6 +35,8 @@ The following technologies are used for the implementation of this project:
 ![FastAPI Badge](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=fff&style=for-the-badge)
 ![Docker Badge](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=for-the-badge)
 ![Vercel Badge](https://img.shields.io/badge/Vercel-000?logo=vercel&logoColor=fff&style=for-the-badge)
+![Swagger Badge](https://img.shields.io/badge/Swagger-85EA2D?logo=swagger&logoColor=000&style=for-the-badge)
+![ReDoc Badge](https://raw.githubusercontent.com/Redocly/redoc/main/docs/images/redoc.png)
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
 
