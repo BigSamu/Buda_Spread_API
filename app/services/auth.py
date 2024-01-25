@@ -1,10 +1,10 @@
 import base64
 import hmac
 import time
-import requests.auth
+from requests.auth import AuthBase
 
 
-class BudaHMACAuth(requests.auth.AuthBase):
+class BudaHMACAuth(AuthBase):
     """Adjunta la autenticación HMAC de Buda al objeto Request."""
 
     def __init__(self, api_key: str, secret: str):

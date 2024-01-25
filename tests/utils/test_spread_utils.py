@@ -2,7 +2,6 @@
 import pytest
 from app.utils import calculate_spread, compare_spread_with_alert_value
 
-
 class TestCalculateSpread:
     def test_calculate_spread_succeeds(self):
         # Test successful spread calculation
