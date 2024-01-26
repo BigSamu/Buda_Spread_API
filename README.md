@@ -137,6 +137,12 @@ The first GET request is for getting alert analysis from all markets and the sec
 
 If you prefer to use [Docker](https://www.docker.com/) in your local environment please run `docker-compose up -d`. Then you can use [Postman](https://www.postman.com/) or visit the Swagger UI URL given above.
 
+More details can be found in the documentation user interfaces that the current API has:
+
+- **SwaggerUI** served at [https://buda-spread-api-sandy.vercel.app/api/docs](https://buda-spread-api-sandy.vercel.app/api/docs)
+- **ReDoc** served at [https://buda-spread-api-sandy.vercel.app/api/redoc](https://spread-api-sandy.vercel.app/api/redoc)
+
+
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>
 
 ---
