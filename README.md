@@ -132,10 +132,8 @@ For polling alert analysis two endpoints can be used with GET request to get the
 
 The first GET request is for getting alert analysis from all markets and the second, for a specific market (i.e. `btc-clp`). If you want to test the polling directly with the deployed version, you can use directly these routes instead for the respective POST and GET requests:
 
-- `https://buda-spread-api-sandy.vercel.app/api/v1/alerts`
-- `https://buda-spread-api-sandy.vercel.app/api/v1/alerts/{market_id}`
-
-
+- POST and GET requests: `https://buda-spread-api-sandy.vercel.app/api/v1/alerts`
+- GET request: `https://buda-spread-api-sandy.vercel.app/api/v1/alerts/{market_id}`
 
 If you prefer to use [Docker](https://www.docker.com/) in your local environment please run `docker-compose up -d`. Then you can use [Postman](https://www.postman.com/) or visit the Swagger UI URL given above.
 
