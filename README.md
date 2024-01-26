@@ -153,7 +153,7 @@ More details can be found in the documentation user interfaces that the current 
 
 ### Testing and Coverage
 
-For checking unit tests in the developed API you can run `pipenv run test`. Likewise, for checking the coverage of those tests, you can run `pipenv run coverage`
+For checking unit tests in the developed API on your local environment you can run `pipenv run test`. Likewise, for checking the coverage of those tests, you can run `pipenv run coverage`
 
 ## Contact Me
 
