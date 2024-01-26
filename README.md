@@ -113,6 +113,15 @@ To get a copy of this project and run it in your local environment, follow the s
 
 After successful installation in your local environment, you can run the API running the command `pipenv run start`. Once done you can test the API either using [Postman](https://www.postman.com/) or by visiting the Swagger UI documentation at [http://localhost:8000/api/docs](http://localhost:8000/api/docs)
 
+For polling alert analysis from a local environment two endpoints can be used:
+
+- `http://localhost:8000/api/v1/alerts`
+- `http://localhost:8000/api/v1/alerts/{market_id}`
+
+The first one is for getting alert analysis from all markets and the second one for a specific market (i.e. `btc-clp`). If you want to test the polling directly with the deployed version, you can use directly this routes:
+
+- 
+
 If you prefer to use [Docker](https://www.docker.com/) in your local environment please run `docker-compose up -d`. Then you can use [Postman](https://www.postman.com/) or visit the Swagger UI URL given above.
 
 <p align="right">(<a href="#back-to-top">back to top</a>)</p>

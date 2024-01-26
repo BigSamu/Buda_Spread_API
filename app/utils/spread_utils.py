@@ -57,8 +57,11 @@ def compare_spread_with_alert_value(
 
     **Returns:**
 
-        alert_details (Dict[str, str]): A dictionary containing the following:
+        alert (Dict[str, str]): A dictionary containing the following:
 
+            - market_id (str): The unique identifier of the market.
+            - spread_value (str): The calculated spread value for the market.
+            - alert_value (str): The value of the spread alert.
             - is_greater (bool): A boolean indicating whether the spread is greater than the alert value.
             - is_less (bool): A boolean indicating whether the spread is less than the alert value.
             - message (str): A string message indicating the status of the spread alert. Possible messages include:
@@ -94,12 +97,15 @@ def compare_spread_with_alert_value(
 
         alert_message += f" Spread Value: {spread_value_formatted}, Alert Value: {alert_value_formatted}"
 
-        alert_details = {
+        alert = {
+            "market_id": market_id,
+            "spread_value": spread_value_formatted,
+            "alert_value": alert_value_formatted,
             "is_greater": diff_spread_alert_value > 0,
             "is_less": diff_spread_alert_value < 0,
             "message": alert_message,
         }
-        return alert_details
+        return alert
 
     except ValueError as e:
         raise ValueError(f"Error formatting spread for market {market_id}: {str(e)}")

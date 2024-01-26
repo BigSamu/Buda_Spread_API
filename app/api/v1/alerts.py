@@ -15,15 +15,15 @@ spread_alert = {"value": None}
 
 @router.get(
     "",
-    response_model=Dict[str, schemas.AlertMessage],
+    response_model=Dict[str, schemas.AlertResponse],
     responses={
         404: {"model": schemas.ErrorResponse, "description": "Not Found"},
         500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
     },
 )
-async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
+async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertResponse]:
     """
-    Get the spread alert status for all markets.
+    Get the spread alert status for all markets from the Buda API.
 
     **Path Parameters:**
 
@@ -31,8 +31,11 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
 
     **Returns:**
 
-        message_alerts (Dict[str, AlertMessage]): A dictionary containing the status of the spread alert for all markets. The dictionary includes the market ID as the key and an AlertMessage object as the value. The AlertMessage object includes the following fields:
+        alerts (Dict[str, AlertResponse]): A dictionary containing the status of the spread alert for all markets. The dictionary includes the market ID as the key and an AlertResponse object as the value. The AlertResponse object includes the following fields:
 
+            - market_id (str): The unique identifier of the market.
+            - spread_value (str): The calculated spread value for the market.
+            - alert_value (str): The value of the spread alert.
             - is_greater (bool): A boolean indicating whether the spread is greater than the alert value.
             - is_less (bool): A boolean indicating whether the spread is less than the alert value.
             - message (str): A string message indicating the status of the spread alert. Possible messages include:
@@ -57,7 +60,7 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
     try:
         markets = buda_api.markets.get_all()
         alert_value = spread_alert["value"]
-        message_alerts = {}
+        alerts = {}
         for market in markets["markets"]:
             ticker = schemas.TickerResponse(
                 **buda_api.tickers.get_one_by_market_id(market_id=market["id"])[
@@ -65,13 +68,13 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
                 ]
             ).model_dump()
             current_spread = calculate_spread(ticker)
-            message_alert = compare_spread_with_alert_value(
+            alert = compare_spread_with_alert_value(
                 spread_value=current_spread["value"],
                 alert_value=spread_alert["value"],
                 market_id=market["id"],
             )
-            message_alerts[market["id"]] = message_alert
-        return message_alerts
+            alerts[market["id"]] = alert
+        return alerts
 
     except ValidationError as e:
         error_details = json.loads(e.json())
@@ -89,15 +92,15 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertMessage]:
 
 @router.get(
     "/{market_id}",
-    response_model=schemas.AlertMessage,
+    response_model=schemas.AlertResponse,
     responses={
         404: {"model": schemas.ErrorResponse, "description": "Not Found"},
         500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
     },
 )
-async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
+async def compare_alert_with_one_market(market_id: str) -> schemas.AlertResponse:
     """
-    Get the spread alert status for a given market.
+    Get the spread alert status for a given market from the Buda API.
 
     **Path Parameters:**
 
@@ -105,8 +108,11 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
 
     **Returns:**
 
-        message_alert (AlertMessage): An AlertMessage object in JSON format indicating the status of the spread alert for the given market. The object includes the following fields:
+        alert (AlertResponse): An AlertResponse object in JSON format indicating the status of the spread alert for the given market. The object includes the following fields:
 
+            - market_id (str): The unique identifier of the market.
+            - spread_value (str): The calculated spread value for the market.
+            - alert_value (str): The value of the spread alert.
             - is_greater (bool): A boolean indicating whether the spread is greater than the alert value.
             - is_less (bool): A boolean indicating whether the spread is less than the alert value.
             - message (str): A string message indicating the status of the spread alert. Possible messages include:
@@ -132,12 +138,12 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
     try:
         ticker = buda_api.tickers.get_one_by_market_id(market_id=market_id)["ticker"]
         current_spread = calculate_spread(ticker)
-        message_alert = compare_spread_with_alert_value(
+        alert = compare_spread_with_alert_value(
             spread_value=current_spread["value"],
             alert_value=spread_alert["value"],
             market_id=market_id,
         )
-        return message_alert
+        return alert
 
     except ValidationError as e:
         error_details = json.loads(e.json())
@@ -169,7 +175,7 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.Message:
 )
 async def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
     """
-    Sets an spread alert for a given market.
+    Sets an spread alert for a given market from the Buda API.
 
     **Request Body:**
 
