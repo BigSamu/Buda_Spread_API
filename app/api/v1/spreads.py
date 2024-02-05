@@ -1,5 +1,5 @@
 import traceback
-from typing import Any, List, Dict
+from typing import Any, List
 import json
 
 from fastapi import APIRouter, HTTPException, status

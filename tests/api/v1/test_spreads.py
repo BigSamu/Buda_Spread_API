@@ -2,8 +2,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
-from pydantic import ValidationError
-from requests import Response, HTTPError
+from requests import HTTPError
 
 from app.main import app
 from app.services.markets import MarketService
@@ -14,11 +13,9 @@ from config import (
     SAMPLE_MARKETS_DATA,
     SAMPLE_MARKETS_DATA_MISSING_MARKET_ID,
     SAMPLE_TICKER_DATA_MARKET_1,
-    SAMPLE_TICKER_DATA_MARKET_2,
-    SAMPLE_TICKER_DATA_MARKET_3,
     SAMPLE_TICKER_DATA_MARKET_1_INVALID_DATA,
     SAMPLE_TICKER_DATA_MARKET_2_MISSING_FIELD,
-    SAMPLE_TICKER_DATA_MARKET_3_INVALID_DATAT_AND_MISSING_FIELD,
+    SAMPLE_TICKER_DATA_MARKET_3_INVALID_DATA_AND_MISSING_FIELD,
     SAMPLE_TICKERS_DATA_SET,
     SAMPLE_TICKERS_DATA_SET_INVALID_VALUE,
     SAMPLE_TICKERS_DATA_SET_MISSING_FIELD,
@@ -28,26 +25,24 @@ from config import (
 client = TestClient(app)
 
 
-# Function to return different ticker data based on market ID
-def _get_ticker_data_mock(market_id: str):
+# Functions to return different ticker data based on market ID
+def _get_tickers_data_set(market_id: str):
     if market_id not in SAMPLE_TICKERS_DATA_SET:
         response = MagicMock(status_code=404)
         raise HTTPError("Market not found", response=response)
     return SAMPLE_TICKERS_DATA_SET[market_id]
 
-
-def _get_ticker_data_mock_invalid_value(market_id: str):
+def _get_tickers_data_set_with_invalid_value_sample(market_id: str):
     return SAMPLE_TICKERS_DATA_SET_INVALID_VALUE[market_id]
 
-
-def _get_ticker_data_mock_missing_field(market_id: str):
+def _get_tickers_data_set_with_missing_field_sample(market_id: str):
     return SAMPLE_TICKERS_DATA_SET_MISSING_FIELD[market_id]
 
-
-def _get_ticker_data_mock_invalid_value_and_missing_field(market_id: str):
+def _get_tickers_data_set_with_invalid_value_and_missing_field_sample(market_id: str):
     return SAMPLE_TICKERS_DATA_SET_INVALID_VALUE_AND_MISSING_FIELD[market_id]
 
 
+# Aux function to raise an HTTP error
 def _raise_http_error(detail: str, status_code: int):
     def error_raiser(*args, **kwargs):
         response = MagicMock(status_code=status_code)
@@ -59,7 +54,7 @@ def _raise_http_error(detail: str, status_code: int):
 class TestGetAllSpreads:
     @patch.object(MarketService, "get_all", return_value=SAMPLE_MARKETS_DATA)
     @patch.object(
-        TickerService, "get_one_by_market_id", side_effect=_get_ticker_data_mock
+        TickerService, "get_one_by_market_id", side_effect=_get_tickers_data_set
     )
     def test_get_spreads_from_all_markets_succeeds(
         self,
@@ -96,7 +91,7 @@ class TestGetAllSpreads:
         return_value=SAMPLE_MARKETS_DATA_MISSING_MARKET_ID,
     )
     @patch.object(
-        TickerService, "get_one_by_market_id", side_effect=_get_ticker_data_mock
+        TickerService, "get_one_by_market_id", side_effect=_get_tickers_data_set
     )
     def test_get_spreads_from_all_markets_fails_with_invalid_market_data(
         self, mock_get_one_ticker_by_market_id, mock_get_all_markets
@@ -110,17 +105,18 @@ class TestGetAllSpreads:
         # Check if TickerService.get_one_by_market_id was called at least once
         mock_get_one_ticker_by_market_id.assert_called()
 
-        # Validate the response for unprocessable entity
+        # Validate the response for not found error
         assert response.status_code == 404
         error_response = response.json()
         assert "detail" in error_response
+        assert error_response["detail"] == "Market not found"
 
     @pytest.mark.parametrize(
         "side_effect",
         [
-            _get_ticker_data_mock_invalid_value,
-            _get_ticker_data_mock_missing_field,
-            _get_ticker_data_mock_invalid_value_and_missing_field,
+            _get_tickers_data_set_with_invalid_value_sample,
+            _get_tickers_data_set_with_missing_field_sample,
+            _get_tickers_data_set_with_invalid_value_and_missing_field_sample,
         ],
     )
     @patch.object(MarketService, "get_all", return_value=SAMPLE_MARKETS_DATA)
@@ -139,9 +135,10 @@ class TestGetAllSpreads:
         # Check TickerService.get_one_by_market_id was called at least once
         mock_get_one_ticker_by_market_id.assert_called()
 
-        # Validate the response for unprocessable entity
+        # Validate the response for unprocessable entity error
         assert response.status_code == 422
         error_response = response.json()
+        assert "detail" in error_response
 
     @patch.object(
         MarketService,
@@ -212,8 +209,6 @@ class TestGetSpreadByMarketId:
         # Validate the response
         assert response.status_code == 200
         spread = response.json()
-
-        # Add more assertions for spread fields
         assert spread["market_id"] == market_id
         assert spread["value"] == "100.000000"
         assert spread["max_bid"] == "900.000000"
@@ -224,7 +219,7 @@ class TestGetSpreadByMarketId:
         "get_one_by_market_id",
         side_effect=_raise_http_error(detail="Market not found", status_code=404),
     )
-    def test_get_spread_by_market_id_fails_with_not_found_error(
+    def test_get_spread_by_market_id_fails_with_market_not_found_error(
         self, mock_get_one_ticker_by_market_id
     ):
         # Making the request
@@ -245,7 +240,7 @@ class TestGetSpreadByMarketId:
         [
             ("market_1", SAMPLE_TICKER_DATA_MARKET_1_INVALID_DATA),
             ("market_2", SAMPLE_TICKER_DATA_MARKET_2_MISSING_FIELD),
-            ("market_3", SAMPLE_TICKER_DATA_MARKET_3_INVALID_DATAT_AND_MISSING_FIELD),
+            ("market_3", SAMPLE_TICKER_DATA_MARKET_3_INVALID_DATA_AND_MISSING_FIELD),
         ],
     )
     @patch.object(TickerService, "get_one_by_market_id")
@@ -264,6 +259,7 @@ class TestGetSpreadByMarketId:
         # Validate the response for unprocessable entity
         assert response.status_code == 422
         error_response = response.json()
+        assert "detail" in error_response
 
     @patch.object(
         TickerService,

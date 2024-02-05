@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator, ValidationError
+from pydantic import BaseModel, field_validator
 from typing import List, Optional
 
 
@@ -15,6 +15,6 @@ class TickerResponse(BaseModel):
     def check_list_structure(cls, v):
         if not isinstance(v, list) or len(v) != 2:
             raise ValueError("must be a list of 2 elements")
-        if not isinstance((float)(v[0]), float):
-            raise TypeError("The first element must be able to cast to a float")
+        if not v[0].replace(".", "").isnumeric():
+            raise ValueError("The first element must be able to cast to a float")
         return v

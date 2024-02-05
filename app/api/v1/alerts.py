@@ -1,5 +1,6 @@
 import traceback
-from typing import Any, List, Dict
+from typing import Dict
+import json
 
 from fastapi import APIRouter, HTTPException, status, Path, Body
 from pydantic import ValidationError
@@ -21,7 +22,7 @@ spread_alert = {"value": None}
         500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
     },
 )
-async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertResponse]:
+def compare_alert_with_all_markets() -> Dict[str, schemas.AlertResponse]:
     """
     Compare the spread alert for all markets from the Buda API.
 
@@ -59,7 +60,6 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertResponse]:
 
     try:
         markets = buda_api.markets.get_all()
-        alert_value = spread_alert["value"]
         alerts = {}
         for market in markets["markets"]:
             ticker = schemas.TickerResponse(
@@ -81,6 +81,13 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertResponse]:
         raise HTTPException(status_code=422, detail={"detail": error_details})
 
     except Exception as err:
+
+        if isinstance(err, HTTPError) and err.response.status_code == 404:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=str(f"Market not found"),
+            )
+
         error_message = str(err)
         error_name = err.__class__.__name__
         print(traceback.format_exc())
@@ -98,7 +105,7 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertResponse]:
         500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
     },
 )
-async def compare_alert_with_one_market(market_id: str) -> schemas.AlertResponse:
+def compare_alert_with_one_market(market_id: str) -> schemas.AlertResponse:
     """
     Compare the spread alert for a given market from the Buda API.
 
@@ -136,7 +143,11 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.AlertResponse
         )
 
     try:
-        ticker = buda_api.tickers.get_one_by_market_id(market_id=market_id)["ticker"]
+        ticker = schemas.TickerResponse(
+                **buda_api.tickers.get_one_by_market_id(market_id=market_id)[
+                    "ticker"
+                ]
+            ).model_dump()
         current_spread = calculate_spread(ticker)
         alert = compare_spread_with_alert_value(
             spread_value=current_spread["value"],
@@ -150,7 +161,7 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.AlertResponse
         raise HTTPException(status_code=422, detail={"detail": error_details})
 
     except Exception as err:
-        if err.response is not None and err.response.status_code == 404:
+        if isinstance(err, HTTPError) and err.response.status_code == 404:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=str(f"Market with id '{market_id}' not found"),
@@ -168,12 +179,8 @@ async def compare_alert_with_one_market(market_id: str) -> schemas.AlertResponse
 @router.post(
     "",
     response_model=schemas.Message,
-    responses={
-        404: {"model": schemas.ErrorResponse, "description": "Not Found"},
-        500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
-    },
 )
-async def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
+def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
     """
     Sets an spread alert for a given market from the Buda API.
 
@@ -194,31 +201,12 @@ async def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
         HTTPException:
 
             - 422 (Unprocessable Entity): If the request data is invalid or cannot be processed.
-            - 500 (Internal Server Error): For any other unexpected error.
     """
-    try:
-        spread_alert["value"] = alert.value
-        alert_value_formatted = "{:,.2f}".format(alert.value)
-        message = {
-            "message": f"Alert set successfully. Alert value: {alert_value_formatted}"
-        }
-        return message
 
-    except ValidationError as e:
-        error_details = json.loads(e.json())
-        raise HTTPException(status_code=422, detail={"detail": error_details})
 
-    except Exception as err:
-        if isinstance(err, HTTPError) and err.response.status_code == 404:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=str(f"Market with id '{market_id}' not found"),
-            )
-
-        error_message = str(err)
-        error_name = err.__class__.__name__
-        print(traceback.format_exc())
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An unexpected error occurred: {error_name}: {error_message}",
-        )
+    spread_alert["value"] = alert.value
+    alert_value_formatted = "{:,.2f}".format(alert.value)
+    message = {
+        "message": f"Alert set successfully. Alert value: {alert_value_formatted}"
+    }
+    return message
