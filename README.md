@@ -6,7 +6,7 @@
 [![Ask Me Anything][ama-badge]][ama-url]
 [![Say Thanks!][say-thanks-badge]][say-thanks-url]
 [![License][license-badge]][license-url]
-![coverage](assets/coverage.svgcoverage.svg)
+![coverage](assets/coverage.svg)
 
 <!-- *********************************************************************** -->
 <!-- I) ABOUT THE PROJECT -->
