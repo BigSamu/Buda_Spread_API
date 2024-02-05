@@ -17,6 +17,7 @@ coverage = "*"
 pytest-mock = "*"
 httpx = "*"
 pytest = "*"
+coverage-badge = "*"
 
 [scripts]
 start = "uvicorn app.main:app --reload"
