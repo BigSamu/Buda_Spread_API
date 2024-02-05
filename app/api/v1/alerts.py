@@ -23,7 +23,7 @@ spread_alert = {"value": None}
 )
 async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertResponse]:
     """
-    Get the spread alert status for all markets from the Buda API.
+    Compare the spread alert for all markets from the Buda API.
 
     **Path Parameters:**
 
@@ -100,7 +100,7 @@ async def compare_alert_with_all_markets() -> Dict[str, schemas.AlertResponse]:
 )
 async def compare_alert_with_one_market(market_id: str) -> schemas.AlertResponse:
     """
-    Get the spread alert status for a given market from the Buda API.
+    Compare the spread alert for a given market from the Buda API.
 
     **Path Parameters:**
 
@@ -181,11 +181,12 @@ async def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
 
         alert (SpreadAlert): A SpreadAlert object in JSON format. The object requires the following fields:
 
-            - alert_value (str): The value of the spread alert.
+            - alert_value (float): The value of the spread alert.
 
     **Returns:**
 
         message (Message): A message object in JSON format with information about the alert set operation. The object includes the following fields:
+
             - message (str): A message indicating the alert was set correctly.
 
     **Raises:**

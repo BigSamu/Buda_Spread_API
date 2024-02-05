@@ -29,10 +29,10 @@ def get_all_spreads() -> List[schemas.SpreadResponse]:
 
         all_spreads (List[SpreadResponse]): A list of SpreadResponse objects in JSON format for all markets. Each object in the list includes the following fields:
 
+            - market_id (str): The unique identifier of the market.
+            - value (str): The calculated spread value for the market.
             - max_bid (str): The maximum bid price for the market.
             - min_ask (str): The minimum ask price for the market.
-            - spread_value (str): The calculated spread value for the market.
-            - market_id (str): The unique identifier of the market.
 
     **Raises:**
 
@@ -61,6 +61,13 @@ def get_all_spreads() -> List[schemas.SpreadResponse]:
         raise HTTPException(status_code=422, detail={"detail": error_details})
 
     except Exception as err:
+
+        if isinstance(err, HTTPError) and err.response.status_code == 404:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=str(f"Market not found"),
+            )
+
         error_message = str(err)
         error_name = err.__class__.__name__
         print(traceback.format_exc())
@@ -78,7 +85,7 @@ def get_all_spreads() -> List[schemas.SpreadResponse]:
         500: {"model": schemas.ErrorResponse, "description": "Internal Server Error"},
     },
 )
-async def get_spread_by_market_id(market_id: str) -> Any:
+def get_spread_by_market_id(market_id: str) -> Any:
     """
     Retrieves the market spread data for a given market ID from the Buda API.
 
@@ -90,10 +97,10 @@ async def get_spread_by_market_id(market_id: str) -> Any:
 
         spread_obj (SpreadResponse): A SpreadResponse object in JSON format for the given market. The object includes the following fields:
 
+            - market_id (str): The unique identifier of the market.
+            - spread_value (str): The calculated spread value for the market.
             - max_bid (str): The maximum bid price for the market.
             - min_ask (str): The minimum ask price for the market.
-            - spread_value (str): The calculated spread value for the market.
-            - market_id (str): The unique identifier of the market.
 
     **Raises:**
 
@@ -118,7 +125,6 @@ async def get_spread_by_market_id(market_id: str) -> Any:
         raise HTTPException(status_code=422, detail={"detail": error_details})
 
     except Exception as err:
-
         if isinstance(err, HTTPError) and err.response.status_code == 404:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class AlertResponse(BaseModel):
     market_id: str
     spread_value: str

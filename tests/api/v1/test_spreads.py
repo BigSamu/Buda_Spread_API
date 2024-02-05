@@ -11,18 +11,18 @@ from app.services.tickers import TickerService
 
 from config import settings
 from config import (
-    SAMPLE_MARKET_DATA,
-    SAMPLE_MARKET_DATA_MISSING_MARKET_ID,
+    SAMPLE_MARKETS_DATA,
+    SAMPLE_MARKETS_DATA_MISSING_MARKET_ID,
     SAMPLE_TICKER_DATA_MARKET_1,
     SAMPLE_TICKER_DATA_MARKET_2,
     SAMPLE_TICKER_DATA_MARKET_3,
     SAMPLE_TICKER_DATA_MARKET_1_INVALID_DATA,
     SAMPLE_TICKER_DATA_MARKET_2_MISSING_FIELD,
     SAMPLE_TICKER_DATA_MARKET_3_INVALID_DATAT_AND_MISSING_FIELD,
-    SAMPLE_TICKER_DATA_SET,
-    SAMPLE_TICKER_DATA_SET_INVALID_VALUE,
-    SAMPLE_TICKER_DATA_SET_MISSING_FIELD,
-    SAMPLE_TICKER_DATA_SET_INVALID_VALUE_AND_MISSING_FIELD,
+    SAMPLE_TICKERS_DATA_SET,
+    SAMPLE_TICKERS_DATA_SET_INVALID_VALUE,
+    SAMPLE_TICKERS_DATA_SET_MISSING_FIELD,
+    SAMPLE_TICKERS_DATA_SET_INVALID_VALUE_AND_MISSING_FIELD,
 )
 
 client = TestClient(app)
@@ -30,36 +30,34 @@ client = TestClient(app)
 
 # Function to return different ticker data based on market ID
 def _get_ticker_data_mock(market_id: str):
-    """Return different ticker data based on the market ID."""
-    return SAMPLE_TICKER_DATA_SET[market_id]
+    if market_id not in SAMPLE_TICKERS_DATA_SET:
+        response = MagicMock(status_code=404)
+        raise HTTPError("Market not found", response=response)
+    return SAMPLE_TICKERS_DATA_SET[market_id]
 
 
 def _get_ticker_data_mock_invalid_value(market_id: str):
-    """Return different ticker data based on the market ID."""
-    return SAMPLE_TICKER_DATA_SET_INVALID_VALUE[market_id]
+    return SAMPLE_TICKERS_DATA_SET_INVALID_VALUE[market_id]
 
 
 def _get_ticker_data_mock_missing_field(market_id: str):
-    """Return different ticker data based on the market ID."""
-    return SAMPLE_TICKER_DATA_SET_MISSING_FIELD[market_id]
+    return SAMPLE_TICKERS_DATA_SET_MISSING_FIELD[market_id]
 
 
 def _get_ticker_data_mock_invalid_value_and_missing_field(market_id: str):
-    """Return different ticker data based on the market ID."""
-    return SAMPLE_TICKER_DATA_SET_INVALID_VALUE_AND_MISSING_FIELD[market_id]
+    return SAMPLE_TICKERS_DATA_SET_INVALID_VALUE_AND_MISSING_FIELD[market_id]
 
 
 def _raise_http_error(detail: str, status_code: int):
-    """Raise an HTTPError with the given detail and status code."""
-    mock_response = MagicMock(spec=Response)
-    mock_response.status_code = status_code
-    error = HTTPError(detail)
-    error.response = mock_response
-    return error
+    def error_raiser(*args, **kwargs):
+        response = MagicMock(status_code=status_code)
+        raise HTTPError(detail, response=response)
+
+    return error_raiser
 
 
 class TestGetAllSpreads:
-    @patch.object(MarketService, "get_all", return_value=SAMPLE_MARKET_DATA)
+    @patch.object(MarketService, "get_all", return_value=SAMPLE_MARKETS_DATA)
     @patch.object(
         TickerService, "get_one_by_market_id", side_effect=_get_ticker_data_mock
     )
@@ -68,13 +66,16 @@ class TestGetAllSpreads:
         mock_get_one_ticker_by_market_id,
         mock_get_all_markets,
     ):
-        number_of_markets = len(SAMPLE_MARKET_DATA["markets"])
+        # Count the number of markets
+        number_of_markets = len(SAMPLE_MARKETS_DATA["markets"])
 
         # Making the request
         response = client.get(f"{settings.API_URL_PREFIX}/spreads")
 
         # Check if MarketService.get_all was called once
         mock_get_all_markets.assert_called_once()
+
+        # Check if TickerService.get_one_by_market_id was called for each market
         assert mock_get_one_ticker_by_market_id.call_count == number_of_markets
 
         # Validate the response
@@ -82,35 +83,35 @@ class TestGetAllSpreads:
         spreads = response.json()
         assert len(spreads) == number_of_markets
 
-        # Check if MarketService.get_all was called once
-        mock_get_all_markets.assert_called_once()
-        # Check if TickerService.get_one_by_market_id was called for each market
-        assert mock_get_one_ticker_by_market_id.call_count == number_of_markets
-
         # Validate each market spread
         for spread in spreads:
-            assert "market_id" in spread
-            assert "max_bid" in spread
             assert "min_ask" in spread
             assert "value" in spread
+            assert "market_id" in spread
+            assert "max_bid" in spread
 
     @patch.object(
         MarketService,
         "get_all",
-        return_value=SAMPLE_MARKET_DATA_MISSING_MARKET_ID,
+        return_value=SAMPLE_MARKETS_DATA_MISSING_MARKET_ID,
     )
-    @patch.object(TickerService, "get_one_by_market_id")
+    @patch.object(
+        TickerService, "get_one_by_market_id", side_effect=_get_ticker_data_mock
+    )
     def test_get_spreads_from_all_markets_fails_with_invalid_market_data(
         self, mock_get_one_ticker_by_market_id, mock_get_all_markets
     ):
+
         # Making the request
         response = client.get(f"{settings.API_URL_PREFIX}/spreads")
 
         # Check if MarketService.get_all was called once
         mock_get_all_markets.assert_called_once()
+        # Check if TickerService.get_one_by_market_id was called at least once
+        mock_get_one_ticker_by_market_id.assert_called()
 
         # Validate the response for unprocessable entity
-        assert response.status_code == 422
+        assert response.status_code == 404
         error_response = response.json()
         assert "detail" in error_response
 
@@ -122,7 +123,7 @@ class TestGetAllSpreads:
             _get_ticker_data_mock_invalid_value_and_missing_field,
         ],
     )
-    @patch.object(MarketService, "get_all", return_value=SAMPLE_MARKET_DATA)
+    @patch.object(MarketService, "get_all", return_value=SAMPLE_MARKETS_DATA)
     @patch.object(TickerService, "get_one_by_market_id")
     def test_get_spreads_from_all_markets_fails_with_invalid_ticker_data(
         self, mock_get_one_ticker_by_market_id, mock_get_all_markets, side_effect
@@ -135,6 +136,8 @@ class TestGetAllSpreads:
 
         # Check if MarketService.get_all was called once
         mock_get_all_markets.assert_called_once()
+        # Check TickerService.get_one_by_market_id was called at least once
+        mock_get_one_ticker_by_market_id.assert_called()
 
         # Validate the response for unprocessable entity
         assert response.status_code == 422
@@ -166,7 +169,7 @@ class TestGetAllSpreads:
             == "An unexpected error occurred: HTTPError: Internal Server Error"
         )
 
-    @patch.object(MarketService, "get_all", return_value=SAMPLE_MARKET_DATA)
+    @patch.object(MarketService, "get_all", return_value=SAMPLE_MARKETS_DATA)
     @patch.object(
         TickerService,
         "get_one_by_market_id",
@@ -178,8 +181,9 @@ class TestGetAllSpreads:
         # Making the request
         response = client.get(f"{settings.API_URL_PREFIX}/spreads")
 
-        # Check if MarketService.get_all was called once
+        # Check MarketService.get_all was called once
         mock_get_all_markets.assert_called_once()
+        # Check TickerService.get_one_by_market_id was called at least once
         mock_get_one_ticker_by_market_id.assert_called()
 
         # Validate the response for internal server error
@@ -202,7 +206,7 @@ class TestGetSpreadByMarketId:
         market_id = "market_1"
         response = client.get(f"{settings.API_URL_PREFIX}/spreads/{market_id}")
 
-        # Verify the mock method was called correctly
+        # Check TickerService.get_one_by_market_id was called once with specific argument
         mock_get_one_ticker_by_market_id.assert_called_once_with(market_id=market_id)
 
         # Validate the response
@@ -211,6 +215,7 @@ class TestGetSpreadByMarketId:
 
         # Add more assertions for spread fields
         assert spread["market_id"] == market_id
+        assert spread["value"] == "100.000000"
         assert spread["max_bid"] == "900.000000"
         assert spread["min_ask"] == "1,000.000000"
 
@@ -226,14 +231,14 @@ class TestGetSpreadByMarketId:
         market_id = "unknown_market"
         response = client.get(f"{settings.API_URL_PREFIX}/spreads/{market_id}")
 
-        # Verify the mock method was called correctly
+        # Check TickerService.get_one_by_market_id was called once with specific argument
         mock_get_one_ticker_by_market_id.assert_called_once_with(market_id=market_id)
 
         # Validate the response for not found error
         assert response.status_code == 404
-        assert f"Market with id '{market_id}' not found" in response.json().get(
-            "detail", ""
-        )
+        error_response = response.json()
+        assert "detail" in error_response
+        assert error_response["detail"] == f"Market with id '{market_id}' not found"
 
     @pytest.mark.parametrize(
         "market_id, malformed_ticker",
@@ -253,7 +258,7 @@ class TestGetSpreadByMarketId:
         # Making the request
         response = client.get(f"{settings.API_URL_PREFIX}/spreads/{market_id}")
 
-        # Check if MarketService.get_all was called once
+        # Check TickerService.get_one_by_market_id was called once with specific argument
         mock_get_one_ticker_by_market_id.assert_called_once_with(market_id=market_id)
 
         # Validate the response for unprocessable entity
@@ -272,9 +277,14 @@ class TestGetSpreadByMarketId:
         market_id = "market_1"
         response = client.get(f"{settings.API_URL_PREFIX}/spreads/{market_id}")
 
-        # Verify the mock method was called correctly
+        # Check TickerService.get_one_by_market_id was called once with specific argument
         mock_get_one_ticker_by_market_id.assert_called_once_with(market_id=market_id)
 
         # Validate the response for internal server error
         assert response.status_code == 500
-        assert "Internal Server Error" in response.json().get("detail", "")
+        error_response = response.json()
+        assert "detail" in error_response
+        assert (
+            error_response["detail"]
+            == "An unexpected error occurred: HTTPError: Internal Server Error"
+        )

@@ -22,6 +22,7 @@ class TestBaseAPIClient:
     def test_base_api_client_get_request_succeeds(
         self, mock_buda_hmac_auth_class, mock_get, base_api_client
     ):
+        # Mock the BudaHMACAuth class and instance
         mock_buda_hmac_auth_instance = MagicMock()
         mock_buda_hmac_auth_class.return_value = mock_buda_hmac_auth_instance
 
@@ -45,6 +46,7 @@ class TestBaseAPIClient:
     def test_base_api_client_get_request_fails(
         self, mock_buda_hmac_auth_class, mock_get, base_api_client
     ):
+        # Mock the BudaHMACAuth class and instance
         mock_buda_hmac_auth_instance = MagicMock()
         mock_buda_hmac_auth_class.return_value = mock_buda_hmac_auth_instance
 

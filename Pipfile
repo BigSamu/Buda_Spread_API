@@ -13,10 +13,10 @@ email-validator = "*"
 
 [dev-packages]
 black = "*"
-pytest = "*"
 coverage = "*"
 pytest-mock = "*"
 httpx = "*"
+pytest = "*"
 
 [scripts]
 start = "uvicorn app.main:app --reload"
