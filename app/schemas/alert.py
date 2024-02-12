@@ -5,7 +5,7 @@ from pydantic import BaseModel
 class AlertCreate(BaseModel):
     value: float
 
-class AlertCreate(BaseModel):
+class AlertUpdate(BaseModel):
     value: Optional[float]
 
 class AlertResponse(BaseModel):

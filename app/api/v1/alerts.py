@@ -2,11 +2,14 @@ import traceback
 from typing import Dict
 import json
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 from pydantic import ValidationError
 from requests.exceptions import HTTPError
 
-from app import schemas
+
+from app import crud, models, schemas
+from app.api.deps import get_db
 from app.services import buda_api
 from app.utils import calculate_spread, compare_spread_with_alert_value
 
@@ -180,7 +183,7 @@ def compare_alert_with_one_market(market_id: str) -> schemas.AlertResponse:
     "",
     response_model=schemas.Message,
 )
-def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
+def set_spread_alert(alert: schemas.SpreadAlert, db: Session = Depends(get_db)) -> schemas.Message:
     """
     Sets an spread alert for a given market from the Buda API.
 
@@ -204,7 +207,11 @@ def set_spread_alert(alert: schemas.SpreadAlert) -> schemas.Message:
     """
 
 
-    spread_alert["value"] = alert.value
+    spread_alert = crud.alert.get_all(db).first()
+    if not spread_alert:
+        crud.alert.create(db, obj_in=alert)
+    else:
+        crud.alert.update(db, db_obj=spread_alert, obj_in=alert)
     alert_value_formatted = "{:,.2f}".format(alert.value)
     message = {
         "message": f"Alert set successfully. Alert value: {alert_value_formatted}"
