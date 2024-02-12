@@ -2,7 +2,7 @@ import traceback
 from typing import Dict
 import json
 
-from fastapi import APIRouter, HTTPException, status, Path, Body
+from fastapi import APIRouter, HTTPException, status
 from pydantic import ValidationError
 from requests.exceptions import HTTPError
 

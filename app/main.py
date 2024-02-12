@@ -32,6 +32,16 @@ app = FastAPI(
 
 
 # ******************************************************************************
+# DATABASE SETTINGS (SUPPOSING NO MIGRATION TOOL (i.e ALEMBIC))
+# ******************************************************************************
+
+# Create tables in database.
+from app.database.base import Base
+from app.database.session import engine
+
+Base.metadata.create_all(bind=engine)
+
+# ******************************************************************************
 # ROUTE SETTINGS
 # ******************************************************************************
 
